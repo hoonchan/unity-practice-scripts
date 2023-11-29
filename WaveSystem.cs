@@ -10,6 +10,9 @@ public class WaveSystem : MonoBehaviour
     private EnemySpawner enemySpawner;
     private int currentWaveIndex = -1;
 
+    public int CurrentWave => currentWaveIndex+1;
+    public int MaxWave => waves.Length;
+
     public void StartWave()
     {
         if(enemySpawner.EnemyList.Count == 0 && currentWaveIndex < waves.Length - 1)

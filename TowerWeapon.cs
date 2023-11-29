@@ -8,18 +8,26 @@ public enum WeaponState { SearchTarget = 0, AttackToTarget}
 public class TowerWeapon : MonoBehaviour
 {
     [SerializeField]
+    private TowerTemplate towerTemplate;
+    [SerializeField]
     private GameObject projectilePrefab;
     [SerializeField]
     private Transform spawnPoint;
-    [SerializeField]
-    private float attackRate = 0.5f;
-    [SerializeField]
-    private float attackRange = 2.0f;
-    [SerializeField]
-    private int attackDamage = 1;
+    // [SerializeField]
+    // private float attackRate = 0.5f;
+    // [SerializeField]
+    // private float attackRange = 2.0f;
+    // [SerializeField]
+    // private int attackDamage = 1;
+    private int level = 0;
     private WeaponState weaponState = WeaponState.SearchTarget;
     private Transform attackTarget = null;
     private EnemySpawner enemySpawner;
+
+    public float Damage => attackDamage;
+    public float Rate => attackRate;
+    public float Range => attackRange;
+    public float Level => level+1;
 
     public void Setup(EnemySpawner enemySpawner)
     {
@@ -59,7 +67,7 @@ public class TowerWeapon : MonoBehaviour
         while(true)
         {
             float closestDistSqr = Mathf.Infinity;
-            for ( int i = 0; i < enemySpawner.EnemyList.Count; ++i)
+            for ( int i = 0; i < enemySpawner.EnemyList.Count; i++)
             {
                 float distance = Vector3.Distance(enemySpawner.EnemyList[i].transform.position, transform.position);
                 if( distance <= attackRange && distance <= closestDistSqr)
@@ -67,14 +75,14 @@ public class TowerWeapon : MonoBehaviour
                     closestDistSqr = distance;
                     attackTarget = enemySpawner.EnemyList[i].transform;
                 }
-
-                if (attackTarget != null)
-                {
-                    ChangeState(WeaponState.AttackToTarget);
-                }
-
-                yield return null;
             }
+
+            if (attackTarget != null)
+            {
+                ChangeState(WeaponState.AttackToTarget);
+            }
+
+            yield return null;
         }
     }
 
@@ -109,44 +117,4 @@ public class TowerWeapon : MonoBehaviour
         clone.GetComponent<Projectile>().Setup(attackTarget, attackDamage);
     }
 
-}
-
-internal struct NewStruct
-{
-    public object Item1;
-    public object Item2;
-
-    public NewStruct(object item1, object item2)
-    {
-        Item1 = item1;
-        Item2 = item2;
-    }
-
-    public override bool Equals(object obj)
-    {
-        return obj is NewStruct other &&
-               EqualityComparer<object>.Default.Equals(Item1, other.Item1) &&
-               EqualityComparer<object>.Default.Equals(Item2, other.Item2);
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Item1, Item2);
-    }
-
-    public void Deconstruct(out object item1, out object item2)
-    {
-        item1 = Item1;
-        item2 = Item2;
-    }
-
-    public static implicit operator (object, object)(NewStruct value)
-    {
-        return (value.Item1, value.Item2);
-    }
-
-    public static implicit operator NewStruct((object, object) value)
-    {
-        return new NewStruct(value.Item1, value.Item2);
-    }
 }
