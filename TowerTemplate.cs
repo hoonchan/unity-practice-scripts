@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu]
 public class TowerTemplate : ScriptableObject
 {
-    public GameObject TowerPrefab;
+    public GameObject towerPrefab;
     public Weapon[] weapon;
 
     [System.Serializable]
@@ -16,5 +16,6 @@ public class TowerTemplate : ScriptableObject
         public float rate;
         public float range;
         public int cost;
+        public int sell;
     }
 }
