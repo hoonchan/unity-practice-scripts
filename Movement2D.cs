@@ -6,10 +6,19 @@ public class Movement2D : MonoBehaviour
     private float moveSpeed = 0.02f;
     [SerializeField]
     private Vector3 moveDirection = Vector3.zero;
+    private float baseMoveSpeed;
 
-    public float MoveSpeed =>moveSpeed;
+    public float MoveSpeed 
+    {
+        set => moveSpeed = Mathf.Max(0, value);
+        get => moveSpeed;
+    }
+    
+    private void Awake()
+    {
+        baseMoveSpeed = moveSpeed;
+    }
 
-    // Update is called once per frame
     private void Update()
     {
         transform.position += moveDirection * moveSpeed * Time.deltaTime;
@@ -18,5 +27,10 @@ public class Movement2D : MonoBehaviour
     public void MoveTo(Vector3 direction)
     {
         moveDirection = direction;
+    }
+
+    public void ResetMoveSpeed()
+    {
+        moveSpeed = baseMoveSpeed;
     }
 }
